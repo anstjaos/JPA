@@ -9,6 +9,12 @@ public class Member {
     private Long id;
     private String name;
 
+    Member() {}
+    Member(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }

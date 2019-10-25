@@ -27,14 +27,20 @@ public class JpaMain {
             Member findMember = em.find(Member.class, 1L);
             findMember.setName("HelloJPA");
             */
+            /*
             List<Member> result = em.createQuery("select m from Member as m", Member.class)
                     .setFirstResult(5)
                     .setMaxResults(8)
                     .getResultList();
+                    for (Member member : result) {
+                        System.out.println("member.name = " + member.getName());
+                    }
+            */
+            Member member = new Member(100L, "zzzz");
+            em.persist(member);
+            em.flush();
 
-            for (Member member : result) {
-                System.out.println("member.name = " + member.getName());
-            }
+            System.out.println("======================");
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
