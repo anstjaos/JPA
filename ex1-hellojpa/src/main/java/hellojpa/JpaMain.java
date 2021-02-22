@@ -8,6 +8,7 @@ import java.util.List;
 
 public class JpaMain {
     public static void main(String[] args) {
+
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
 
         EntityManager em = emf.createEntityManager();
@@ -16,29 +17,21 @@ public class JpaMain {
         tx.begin();
 
         try{
-            /* 삽입
-            Member member = new Member();
-            member.setId(2L);
-            member.setName("HelloB");
+            Team team = new Team();
+            team.setName("TeamA");
+            em.persist(team);
 
+            Member member = new Member();
+            member.setName("member1");
+            member.setTeam(team);
             em.persist(member);
-            */
-            /* 수정
-            Member findMember = em.find(Member.class, 1L);
-            findMember.setName("HelloJPA");
-            */
-            /*
-            List<Member> result = em.createQuery("select m from Member as m", Member.class)
-                    .setFirstResult(5)
-                    .setMaxResults(8)
-                    .getResultList();
-                    for (Member member : result) {
-                        System.out.println("member.name = " + member.getName());
-                    }
-            */
-            Member member = new Member(100L, "zzzz");
-            em.persist(member);
+
             em.flush();
+            em.clear();
+
+            Member findMember = em.find(Member.class, member.getId());
+            Team findTeam = findMember.getTeam();
+            System.out.println("findTeam = " + findTeam.getName());
 
             System.out.println("======================");
             tx.commit();
