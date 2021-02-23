@@ -1,5 +1,8 @@
 package hellojpa;
 
+import hellojpa.domain.Order;
+import hellojpa.domain.OrderItem;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -17,24 +20,14 @@ public class JpaMain {
         tx.begin();
 
         try{
-            Team team = new Team();
-            team.setName("TeamA");
-            em.persist(team);
+            Order order = new Order();
+            em.persist(order);
+//            order.addOrderItem(new OrderItem());
 
-            Member member = new Member();
-            member.setName("member1");
-            member.setTeam(team);   // 연관 관계의 주인에게만 값을 넣어야한다.
-            em.persist(member);
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrder(order);
+            em.persist(orderItem);
 
-            em.flush();
-            em.clear();
-
-            Member findMember = em.find(Member.class, member.getId());
-
-            List<Member> members = findMember.getTeam().getMembers();
-
-            members.forEach(m -> System.out.println(m.getName()));
-            System.out.println("======================");
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
