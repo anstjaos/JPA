@@ -23,7 +23,7 @@ public class JpaMain {
 
             Member member = new Member();
             member.setName("member1");
-            member.setTeam(team);
+            member.setTeam(team);   // 연관 관계의 주인에게만 값을 넣어야한다.
             em.persist(member);
 
             em.flush();

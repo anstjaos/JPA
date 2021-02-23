@@ -12,7 +12,7 @@ public class Team {
 
     private String name;
 
-    @OneToMany(mappedBy = "team")
+    @OneToMany(mappedBy = "team")   // 읽기 전용이다.
     private List<Member> members = new ArrayList<>();
 
     public Long getId() {

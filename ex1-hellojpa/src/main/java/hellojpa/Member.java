@@ -40,5 +40,7 @@ public class Member {
 
     public void setTeam(Team team) {
         this.team = team;
+        // 순수한 객체 관계를 고려하면 항상 양쪽 다 값을 입력해야 한다.
+        team.getMembers().add(this); // 연관 관계 편의 메소드
     }
 }
