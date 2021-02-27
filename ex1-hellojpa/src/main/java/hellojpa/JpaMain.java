@@ -29,6 +29,13 @@ public class JpaMain {
             em.persist(orderItem);
 
             tx.commit();
+
+            em.flush();
+            em.clear();
+
+            orderItem = em.find(OrderItem.class, orderItem.getId());
+            System.out.println(orderItem.getOrder().getId());
+
         } catch (Exception e) {
             tx.rollback();
         } finally {
