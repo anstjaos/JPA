@@ -21,3 +21,4 @@ public class Item {
     @ManyToMany(mappedBy = "items")
     private List<Category> categoryList = new ArrayList<>();
 }
+

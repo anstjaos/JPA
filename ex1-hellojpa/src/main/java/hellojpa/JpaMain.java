@@ -20,22 +20,17 @@ public class JpaMain {
         tx.begin();
 
         try{
-            Order order = new Order();
-            em.persist(order);
-//            order.addOrderItem(new OrderItem());
 
-            OrderItem orderItem = new OrderItem();
-            orderItem.setOrder(order);
-            em.persist(orderItem);
+            Child child1 = new Child();
+            Child child2 = new Child();
+
+            Parent parent = new Parent();
+            parent.addChild(child1);
+            parent.addChild(child2);
+
+            em.persist(parent);
 
             tx.commit();
-
-            em.flush();
-            em.clear();
-
-            orderItem = em.find(OrderItem.class, orderItem.getId());
-            System.out.println(orderItem.getOrder().getId());
-
         } catch (Exception e) {
             tx.rollback();
         } finally {
