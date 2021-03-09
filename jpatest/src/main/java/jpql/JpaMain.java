@@ -14,20 +14,38 @@ public class JpaMain {
         tx.begin();
 
         try{
-            for (int i = 0; i < 15; i++) {
-                Member member = new Member();
-                member.setUserName("member" + i);
-                member.setAge(i);
-                member.setType(MemberType.ADMIN);
-                em.persist(member);
-            }
+            Team teamA = new Team();
+            teamA.setName("팀A");
+            em.persist(teamA);
 
-            List<Member> query = em.createQuery("select m from Member m where m.type = jpql.MemberType.ADMIN", Member.class)
-                    .setFirstResult(0)
-                    .setMaxResults(10)
+            Team teamB = new Team();
+            teamB.setName("팀B");
+            em.persist(teamB);
+
+            Member member1 = new Member();
+            member1.setUserName("회원1");
+            member1.setTeam(teamA);
+            em.persist(member1);
+
+            Member member2 = new Member();
+            member2.setUserName("회원2");
+            member2.setTeam(teamA);
+            em.persist(member2);
+
+            Member member3 = new Member();
+            member3.setUserName("회원3");
+            member3.setTeam(teamB);
+            em.persist(member3);
+
+            em.flush();
+            em.clear();
+
+            String query = "select m From Member m";
+
+            List<Member> result = em.createQuery(query, Member.class)
                     .getResultList();
 
-            query.forEach(m -> System.out.println("member = " + m));
+            result.forEach(m -> System.out.println("member = " + m.getUserName() + ", " + m.getTeam().getName()));
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
