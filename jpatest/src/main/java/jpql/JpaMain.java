@@ -18,10 +18,11 @@ public class JpaMain {
                 Member member = new Member();
                 member.setUserName("member" + i);
                 member.setAge(i);
+                member.setType(MemberType.ADMIN);
                 em.persist(member);
             }
 
-            List<Member> query = em.createQuery("select m from Member m order by m.age desc", Member.class)
+            List<Member> query = em.createQuery("select m from Member m where m.type = jpql.MemberType.ADMIN", Member.class)
                     .setFirstResult(0)
                     .setMaxResults(10)
                     .getResultList();
