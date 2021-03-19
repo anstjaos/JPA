@@ -33,6 +33,7 @@ class QuerydslApplicationTests {
 		Hello result = query.selectFrom(qHello).fetchOne();
 
 		assertThat(result).isEqualTo(hello);
+		assert result != null;
 		assertThat(result.getId()).isEqualTo(hello.getId());
 	}
 
