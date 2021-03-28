@@ -7,6 +7,7 @@ import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -676,5 +677,43 @@ public class QuerydslBasicTest {
                 .where(member.age.gt(18))
                 .execute();
         // then
+    }
+
+    @Test
+    public void sqlFunction() {
+        // given
+
+        // when
+        // Hibernate에서 정의한 Function만 가능
+        List<String> result = queryFactory
+                .select(
+                        Expressions.stringTemplate(
+                                "function('replace', {0}, {1}, {2})",
+                                member.username, "member", "m")
+                )
+                .from(member)
+                .fetch();
+        // then
+        for (String s : result) {
+            System.out.println("s = " + s);
+        }
+    }
+
+    @Test
+    public void sqlFunction2() {
+        // given
+
+        // when
+        List<String> result = queryFactory
+                .select(member.username)
+                .from(member)
+//                .where(member.username.eq(Expressions.stringTemplate(
+//                        "function('lower', {0})", member.username)))
+                .where(member.username.eq(member.username.lower()))
+                .fetch();
+        // then
+        for (String s : result) {
+            System.out.println("s = " + s);
+        }
     }
 }
