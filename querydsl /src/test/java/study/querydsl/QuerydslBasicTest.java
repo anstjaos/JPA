@@ -4,7 +4,6 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ExpressionUtils;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
@@ -24,11 +23,10 @@ import study.querydsl.entity.Team;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import java.util.List;
 
-import static com.querydsl.jpa.JPAExpressions.*;
+import static com.querydsl.jpa.JPAExpressions.select;
 import static org.assertj.core.api.Assertions.assertThat;
 import static study.querydsl.entity.QMember.member;
 import static study.querydsl.entity.QTeam.team;
@@ -630,5 +628,53 @@ public class QuerydslBasicTest {
 
     private BooleanExpression allEq(String usernameEq, Integer ageCond) {
         return usernameEq(usernameEq).and(ageEq(ageCond));
+    }
+
+    @Test
+    public void bulkUpdate() {
+        // given
+
+        // when
+        long count = queryFactory
+                .update(member)
+                .set(member.username, "비회원")
+                .where(member.age.lt(28))
+                .execute();
+        // DB와 영속성 컨텍스트의 상태가 다르다.
+        // 모든 bulk 연산은 영속성 컨텍스트를 무시하고 DB에 값을 바꾼다.
+        // then
+        // 영속성 컨텍스트에 값이 있을 경우 DB에서 불러온 것이 무시된다.
+        // 이를 방지하려면 em.flush(); em.clear(); 실행
+        List<Member> result = queryFactory
+                .selectFrom(member)
+                .fetch();
+
+        for (Member member : result) {
+            System.out.println("member = " + member);
+        }
+    }
+
+    @Test
+    public void bulkAdd() {
+        // given
+
+        // when
+        queryFactory
+                .update(member)
+                .set(member.age, member.age.add(1))
+                .execute();
+        // then
+    }
+
+    @Test
+    public void bulkDelete() {
+        // given
+
+        // when
+        long count = queryFactory
+                .delete(member)
+                .where(member.age.gt(18))
+                .execute();
+        // then
     }
 }
