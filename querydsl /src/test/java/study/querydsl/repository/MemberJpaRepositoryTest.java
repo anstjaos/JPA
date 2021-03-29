@@ -27,16 +27,16 @@ class MemberJpaRepositoryTest {
     public void basicTest() {
         // given
         Member member = new Member("member1", 10);
-        // when
         memberJpaRepository.save(member);
+        // when
         // then
         Member findMember = memberJpaRepository.findById(member.getId()).get();
         assertThat(findMember).isEqualTo(member);
 
-        List<Member> result1 = memberJpaRepository.findAll();
+        List<Member> result1 = memberJpaRepository.findAll_Querydsl();
         assertThat(result1).containsExactly(member);
 
-        List<Member> result2 = memberJpaRepository.findByUsername("member1");
+        List<Member> result2 = memberJpaRepository.findByUsername_Querydsl("member1");
         assertThat(result2).containsExactly(member);
     }
 }

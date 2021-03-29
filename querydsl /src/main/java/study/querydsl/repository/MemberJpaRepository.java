@@ -8,6 +8,8 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
+import static study.querydsl.entity.QMember.member;
+
 @Repository
 public class MemberJpaRepository {
 
@@ -33,9 +35,22 @@ public class MemberJpaRepository {
                 .getResultList();
     }
 
+    public List<Member> findAll_Querydsl() {
+        return queryFactory
+                .selectFrom(member)
+                .fetch();
+    }
+
     public List<Member> findByUsername(String username) {
         return em.createQuery("select m from Member m where m.username = :username", Member.class)
                 .setParameter("username", username)
                 .getResultList();
+    }
+
+    public List<Member> findByUsername_Querydsl(String username) {
+        return queryFactory
+                .selectFrom(member)
+                .where(member.username.eq(username))
+                .fetch();
     }
 }
