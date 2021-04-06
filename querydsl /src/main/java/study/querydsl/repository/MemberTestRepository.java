@@ -36,6 +36,7 @@ public class MemberTestRepository extends Querydsl4RepositorySupport {
 
     public Page<Member> searchPageByApplyPage(MemberSearchCondition condition, Pageable pageable) {
         JPAQuery<Member> query = selectFrom(member)
+                .leftJoin(member.team, team)
                 .where(usernameEq(condition.getUsername()),
                         teamNameEq(condition.getTeamName()),
                         ageGoe(condition.getAgeGoe()),
@@ -49,10 +50,29 @@ public class MemberTestRepository extends Querydsl4RepositorySupport {
     public Page<Member> applyPagination(MemberSearchCondition condition, Pageable pageable) {
         return applyPagination(pageable, query ->
                 query.selectFrom(member)
+                        .leftJoin(member.team, team)
                         .where(usernameEq(condition.getUsername()),
                                 teamNameEq(condition.getTeamName()),
                                 ageGoe(condition.getAgeGoe()),
                                 ageLoe(condition.getAgeLoe())));
+    }
+
+    public Page<Member> applyPagination2(MemberSearchCondition condition, Pageable pageable) {
+        return applyPagination(pageable, contentQuery -> contentQuery
+                .selectFrom(member)
+                .leftJoin(member.team, team)
+                .where(usernameEq(condition.getUsername()),
+                        teamNameEq(condition.getTeamName()),
+                        ageGoe(condition.getAgeGoe()),
+                        ageLoe(condition.getAgeLoe())
+                ), countQuery -> countQuery
+                .select(member.id)
+                .from(member)
+                .leftJoin(member.team, team)
+                .where(usernameEq(condition.getUsername()),
+                        teamNameEq(condition.getTeamName()),
+                        ageGoe(condition.getAgeGoe()),
+                        ageLoe(condition.getAgeLoe())));
     }
 
     private BooleanExpression usernameEq(String username) {
